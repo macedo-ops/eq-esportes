@@ -5,6 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <title>EQ Esportes</title>
 <meta name="description" content="EQ Esportes — app oficial de basquete, vôlei e futevôlei da Comunidade de Engenharia Química (DAEQ), com cadastro de participantes, check-in e sorteio de times.">
+
+<!-- Open Graph (preview ao compartilhar em WhatsApp, Instagram, etc) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="EQ Esportes">
+<meta property="og:title" content="EQ Esportes">
+<meta property="og:description" content="App oficial de basquete, vôlei e futevôlei da Comunidade de Engenharia Química (DAEQ) — check-in, sorteio de times e placar ao vivo.">
+<meta property="og:image" content="https://eq-esportes.vercel.app/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://eq-esportes.vercel.app/">
+<meta property="og:locale" content="pt_BR">
+
+<!-- Twitter/X card (mesma ideia do Open Graph) -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="EQ Esportes">
+<meta name="twitter:description" content="Check-in, sorteio de times e placar ao vivo de basquete, vôlei e futevôlei.">
+<meta name="twitter:image" content="https://eq-esportes.vercel.app/og-image.png">
+
+<link rel="canonical" href="https://eq-esportes.vercel.app/">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0e0d0c">
 <link rel="icon" href="icon-192.png">
@@ -811,6 +830,9 @@ function renderHome(root){
   const pt=document.createElement("button");pt.type="button";pt.className="tile participantes";pt.dataset.navParticipantes="1";
   pt.innerHTML=`<div class="emoji">👥</div><div><div class="label">Participantes</div><div class="tag">${participants.length} cadastrado${participants.length===1?"":"s"}</div></div>`;
   grid.appendChild(pt);root.appendChild(grid);
+  const foot=document.createElement("div");foot.style.cssText="text-align:center;margin-top:22px;";
+  foot.innerHTML=`<a href="privacidade.html" style="color:var(--ink-dim);font-size:12px;text-decoration:underline;">Política de Privacidade</a>`;
+  root.appendChild(foot);
 }
 
 function starSVG(fillPct){
