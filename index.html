@@ -523,8 +523,28 @@ main#app{position:relative;z-index:1;}
 .auth-btn{background:linear-gradient(180deg,rgba(242,101,10,.12),rgba(242,101,10,.04));border:1px solid rgba(242,101,10,.35);color:var(--ink);border-radius:999px;padding:8px 16px;font-size:12px;font-family:'Inter',sans-serif;font-weight:700;letter-spacing:.01em;cursor:pointer;display:flex;align-items:center;gap:8px;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.18);transition:transform .15s ease,border-color .15s ease,background .15s ease}
 .auth-btn:hover{transform:translateY(-1px);border-color:var(--amber);background:rgba(242,101,10,.14)}.auth-btn:active{transform:scale(.97)}.auth-btn.on{color:var(--amber);border-color:var(--amber-dim)}
 .readonly-banner{background:rgba(226,86,79,0.08);border:1px solid rgba(226,86,79,0.35);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--ink-dim);font-family:'IBM Plex Mono',monospace;display:flex;gap:8px;align-items:flex-start}
-.login-overlay{position:fixed;inset:0;background:rgba(6,5,4,.72);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px;}
-.login-modal{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:24px;width:100%;max-width:340px;box-shadow:0 20px 60px rgba(0,0,0,.5);}
+.login-overlay{position:fixed;inset:0;background:rgba(6,5,4,.72);backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center;z-index:200;padding:0;opacity:1;transition:opacity .2s ease;}
+.login-overlay.sheet-closing{opacity:0;}
+.login-modal{
+  background:var(--panel);border:1px solid var(--line);border-bottom:none;
+  border-top-left-radius:var(--radius);border-top-right-radius:var(--radius);
+  padding:12px 24px calc(24px + env(safe-area-inset-bottom));
+  width:100%;max-width:480px;max-height:88vh;overflow-y:auto;
+  box-shadow:0 -12px 40px rgba(0,0,0,.5);
+  animation:sheet-slide-up .3s cubic-bezier(.2,.8,.2,1) both;
+}
+.login-modal.sheet-closing{animation:sheet-slide-down .22s ease both;}
+@keyframes sheet-slide-up{from{transform:translateY(100%);}to{transform:translateY(0);}}
+@keyframes sheet-slide-down{from{transform:translateY(0);}to{transform:translateY(100%);}}
+@media (prefers-reduced-motion: reduce){
+  .login-modal{animation:none;}
+  .login-modal.sheet-closing{animation:none;}
+  .login-overlay{transition:none;}
+}
+.sheet-handle{
+  width:36px;height:4px;border-radius:999px;background:var(--line);
+  margin:4px auto 16px;touch-action:none;cursor:grab;flex-shrink:0;
+}
 .login-modal h2{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.04em;margin:0 0 4px;}
 .login-modal p{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-dim);margin:0 0 16px;}
 .login-modal input{width:100%;box-sizing:border-box;background:var(--bg-alt);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:12px 16px;font-size:15px;font-family:'Inter',sans-serif;margin-bottom:16px;}
@@ -704,7 +724,7 @@ main{max-width:760px!important;}
 .pulse-photo-caption span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--amber-soft);}
 
 /* ---------- Sobre: modal com mais corpo (história, títulos, foto, dias fixos) ---------- */
-.about-modal{max-width:400px;max-height:min(640px,86vh);overflow-y:auto;}
+.about-modal{max-width:480px;}
 .about-photo-wrap{position:relative;margin:4px 0 16px;clip-path:polygon(0 0,100% 0,100% 100%,10px 100%);overflow:hidden;border-left:3px solid var(--amber);}
 .about-photo-wrap img{width:100%;display:block;object-fit:cover;max-height:210px;filter:var(--duotone-alazao);}
 .about-photo-wrap .about-caption{position:absolute;left:0;right:0;bottom:0;padding:8px 12px;background:linear-gradient(to top, rgba(0,0,0,.88), transparent);font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.03em;color:#fff;}
@@ -826,7 +846,8 @@ main{max-width:760px!important;}
 }
 
 /* ---------- login / about overlay ---------- */
-.login-modal{clip-path:polygon(0 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%);border-left:3px solid var(--amber)!important;}
+.login-modal{border-radius:0!important;clip-path:polygon(16px 0,100% 0,100% 100%,0 100%);border-left:3px solid var(--amber)!important;}
+.sheet-handle{border-radius:0!important;background:var(--amber-dim)!important;}
 .login-modal h2{font-family:'Barlow Condensed',sans-serif!important;font-weight:900!important;font-size:26px!important;text-transform:uppercase!important;}
 .login-modal p{font-family:'Space Mono',monospace!important;}
 .login-modal input{border-radius:0!important;}
@@ -988,10 +1009,47 @@ const sportRefs = Object.fromEntries(SPORTS.map(s => [s.id, db.collection("eq-es
 let isOrganizer = false;
 auth.onAuthStateChanged(user=>{ isOrganizer = !!user; render(); });
 
-function closeLoginModal(){
-  const ov=document.getElementById("loginOverlay");
-  if(ov) ov.remove();
+/* ---------- bottom sheet: helpers compartilhados de fechar/arrastar/esc ---------- */
+function closeSheet(overlayId){
+  const ov=document.getElementById(overlayId);
+  if(!ov) return;
+  const modal=ov.querySelector(".login-modal");
+  if(modal){ modal.style.transform=""; modal.style.transition=""; modal.classList.add("sheet-closing"); }
+  ov.classList.add("sheet-closing");
+  document.removeEventListener("keydown", ov._escHandler || (()=>{}));
+  setTimeout(()=>{ if(ov.parentNode) ov.remove(); }, 220);
 }
+function makeSheetDraggable(handleEl, modalEl, onDismiss){
+  if(!handleEl || !modalEl) return;
+  let startY=0, dragY=0, dragging=false;
+  const threshold=90;
+  handleEl.addEventListener("pointerdown", e=>{
+    dragging=true; startY=e.clientY; modalEl.style.transition="none";
+    try{ handleEl.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  handleEl.addEventListener("pointermove", e=>{
+    if(!dragging) return;
+    dragY=Math.max(0, e.clientY-startY);
+    modalEl.style.transform=`translateY(${dragY}px)`;
+  });
+  const endDrag=()=>{
+    if(!dragging) return;
+    dragging=false; modalEl.style.transition="";
+    if(dragY>threshold){ onDismiss(); } else { modalEl.style.transform=""; }
+    dragY=0;
+  };
+  handleEl.addEventListener("pointerup", endDrag);
+  handleEl.addEventListener("pointercancel", endDrag);
+}
+function attachSheetEsc(overlayId, onDismiss){
+  const ov=document.getElementById(overlayId);
+  if(!ov) return;
+  const handler=e=>{ if(e.key==="Escape") onDismiss(); };
+  ov._escHandler=handler;
+  document.addEventListener("keydown", handler);
+}
+
+function closeLoginModal(){ closeSheet("loginOverlay"); }
 function loginOrganizer(){
   closeLoginModal();
   const overlay=document.createElement("div");
@@ -999,6 +1057,7 @@ function loginOrganizer(){
   overlay.id="loginOverlay";
   overlay.innerHTML=`
     <div class="login-modal">
+      <div class="sheet-handle" id="loginSheetHandle"></div>
       <h2>Entrar como organizador</h2>
       <p>Digite a senha de organizador para liberar a edição.</p>
       <input type="password" id="loginPassInput" placeholder="Senha" autocomplete="current-password" />
@@ -1029,14 +1088,14 @@ function loginOrganizer(){
   document.getElementById("loginCancelBtn").onclick=closeLoginModal;
   overlay.addEventListener("click",e=>{ if(e.target===overlay) closeLoginModal(); });
   input.addEventListener("keydown",e=>{ if(e.key==="Enter") submit(); });
+  makeSheetDraggable(document.getElementById("loginSheetHandle"), overlay.querySelector(".login-modal"), closeLoginModal);
+  attachSheetEsc("loginOverlay", closeLoginModal);
   setTimeout(()=>input.focus(),50);
 }
 function logoutOrganizer(){
   auth.signOut().then(()=> showToast("Modo organizador desativado."));
 }
-function closeAboutModal(){
-  const ov=document.getElementById("aboutOverlay"); if(ov) ov.remove();
-}
+function closeAboutModal(){ closeSheet("aboutOverlay"); }
 function openAboutModal(){
   closeAboutModal();
   const overlay=document.createElement("div");
@@ -1044,6 +1103,7 @@ function openAboutModal(){
   overlay.id="aboutOverlay";
   overlay.innerHTML=`
     <div class="login-modal about-modal">
+      <div class="sheet-handle" id="aboutSheetHandle"></div>
       <h2>Sobre o EQ Esportes</h2>
       <div class="about-photo-wrap">
         <img src="campeoes.jpg" alt="Time do Alazão comemorando um título" loading="lazy" />
@@ -1078,6 +1138,8 @@ function openAboutModal(){
   document.body.appendChild(overlay);
   document.getElementById("aboutCloseBtn").onclick=closeAboutModal;
   overlay.addEventListener("click",e=>{ if(e.target===overlay) closeAboutModal(); });
+  makeSheetDraggable(document.getElementById("aboutSheetHandle"), overlay.querySelector(".login-modal"), closeAboutModal);
+  attachSheetEsc("aboutOverlay", closeAboutModal);
 }
 function requireOrganizer(){
   if(!isOrganizer){ showToast("Entre no modo organizador para fazer isso."); return false; }
