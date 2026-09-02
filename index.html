@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, viewport-fit=cover" />
 <title>EQ Esportes</title>
 <meta name="description" content="EQ Esportes — app oficial de basquete, vôlei, futevôlei e futebol da Comunidade de Engenharia Química (DAEQ), com cadastro de participantes, check-in e sorteio de times.">
 
@@ -56,6 +56,10 @@
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
+  /* trava zoom por gesto (pinch e double-tap) além do que o viewport meta já cobre;
+     -webkit-text-size-adjust evita que o iOS aumente a fonte sozinho ao rotacionar */
+  html{touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+  input,select,textarea,button{touch-action:manipulation;}
   body{
     position:relative;
     background:
