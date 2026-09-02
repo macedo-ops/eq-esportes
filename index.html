@@ -329,10 +329,16 @@ main#app{position:relative;z-index:1;}
       </div>
       <div class="sub">À disposição da torcida do Alazão</div>
     </div>
-    <div id="authSlot"></div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button type="button" class="btn small" onclick="openAboutModal()" title="Sobre o EQ Esportes" aria-label="Sobre o EQ Esportes">Sobre</button>
+      <div id="authSlot"></div>
+    </div>
   </div>
 </header>
 <main id="app"></main>
+<footer style="text-align:center;padding:22px 16px 28px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink-dim);">
+  Desenvolvido pelo DAEQ — Diretório Acadêmico de Engenharia Química "Fernando Benedicto Mainier" · UFF
+</footer>
 <div class="toast" id="toast"></div>
 <script>
 "use strict";
@@ -408,6 +414,31 @@ function loginOrganizer(){
 }
 function logoutOrganizer(){
   auth.signOut().then(()=> showToast("Modo organizador desativado."));
+}
+function closeAboutModal(){
+  const ov=document.getElementById("aboutOverlay"); if(ov) ov.remove();
+}
+function openAboutModal(){
+  closeAboutModal();
+  const overlay=document.createElement("div");
+  overlay.className="login-overlay";
+  overlay.id="aboutOverlay";
+  overlay.innerHTML=`
+    <div class="login-modal">
+      <h2>Sobre o EQ Esportes</h2>
+      <p style="margin-bottom:14px;">
+        Aplicativo oficial de organização das partidas de basquete, vôlei e futevôlei da
+        Comunidade de Engenharia Química, mantido pelo DAEQ — Diretório Acadêmico de Engenharia
+        Química "Fernando Benedicto Mainier" (UFF). Aqui você faz seu cadastro, avalia seu nível
+        em cada esporte, confirma presença no dia do jogo e acompanha o sorteio e o placar ao vivo.
+      </p>
+      <div class="login-actions">
+        <button type="button" class="btn primary" id="aboutCloseBtn" style="flex:1;">Entendi</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById("aboutCloseBtn").onclick=closeAboutModal;
+  overlay.addEventListener("click",e=>{ if(e.target===overlay) closeAboutModal(); });
 }
 function requireOrganizer(){
   if(!isOrganizer){ showToast("Entre no modo organizador para fazer isso."); return false; }
