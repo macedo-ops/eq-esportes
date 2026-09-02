@@ -4,13 +4,13 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 <title>EQ Esportes</title>
-<meta name="description" content="EQ Esportes — app oficial de basquete, vôlei e futevôlei da Comunidade de Engenharia Química (DAEQ), com cadastro de participantes, check-in e sorteio de times.">
+<meta name="description" content="EQ Esportes — app oficial de basquete, vôlei, futevôlei e futebol da Comunidade de Engenharia Química (DAEQ), com cadastro de participantes, check-in e sorteio de times.">
 
 <!-- Open Graph (preview ao compartilhar em WhatsApp, Instagram, etc) -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="EQ Esportes">
 <meta property="og:title" content="EQ Esportes">
-<meta property="og:description" content="App oficial de basquete, vôlei e futevôlei da Comunidade de Engenharia Química (DAEQ) — check-in, sorteio de times e placar ao vivo.">
+<meta property="og:description" content="App oficial de basquete, vôlei, futevôlei e futebol da Comunidade de Engenharia Química (DAEQ) — check-in, sorteio de times e placar ao vivo.">
 <meta property="og:image" content="https://eq-esportes.vercel.app/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -20,7 +20,7 @@
 <!-- Twitter/X card (mesma ideia do Open Graph) -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="EQ Esportes">
-<meta name="twitter:description" content="Check-in, sorteio de times e placar ao vivo de basquete, vôlei e futevôlei.">
+<meta name="twitter:description" content="Check-in, sorteio de times e placar ao vivo de basquete, vôlei, futevôlei e futebol.">
 <meta name="twitter:image" content="https://eq-esportes.vercel.app/og-image.png">
 
 <link rel="canonical" href="https://eq-esportes.vercel.app/">
@@ -590,16 +590,16 @@ main{max-width:760px!important;}
 /* ---------- home: grid de "quadras" em blocos sólidos angulados ---------- */
 .grid{gap:3px!important;}
 .tile{
-  background:#0c0c0c!important;
+  background:linear-gradient(155deg, color-mix(in srgb, var(--accent, var(--amber)) 48%, #0c0c0c) 0%, #0c0c0c 68%)!important;
   border:none!important;
   border-radius:0!important;
   padding:16px 14px 14px!important;
   clip-path:polygon(0 0,100% 0,100% 100%,10px 100%);
-  border-left:4px solid var(--accent,var(--amber))!important;
+  border-left:5px solid var(--accent,var(--amber))!important;
   min-height:112px!important;
-  transition:transform .12s ease,background .12s ease!important;
+  transition:transform .12s ease,filter .12s ease!important;
 }
-.tile:hover{background:#131313!important;transform:none!important;box-shadow:none!important;}
+.tile:hover{filter:brightness(1.12)!important;transform:none!important;box-shadow:none!important;}
 .tile:active{transform:scale(.98)!important;}
 .tile::after{display:none!important;}
 .tile .label{font-family:'Barlow Condensed',sans-serif!important;font-weight:900!important;font-size:22px!important;text-transform:uppercase!important;}
@@ -629,6 +629,38 @@ main{max-width:760px!important;}
 
 .home-section-label{font-family:'Space Mono',monospace!important;}
 .install-banner{border-radius:0!important;clip-path:polygon(0 0,100% 0,100% 100%,10px 100%);border-left:3px solid var(--amber)!important;background:#0c0c0c!important;}
+
+/* ---------- home: conteúdo "vivo" mesmo sem partida rolando ---------- */
+.home-pulse{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:620px;margin:0 auto;}
+@media (min-width:520px){.home-pulse{grid-template-columns:repeat(3,1fr);max-width:760px;}}
+.pulse-card{
+  background:#0c0c0c;border-left:4px solid var(--amber);
+  clip-path:polygon(0 0,100% 0,100% 100%,10px 100%);
+  padding:14px 16px;display:flex;flex-direction:column;gap:2px;min-height:96px;
+}
+.pulse-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:6px;}
+.pulse-score{font-family:'Bebas Neue',sans-serif;font-size:38px;line-height:1;color:var(--ink);letter-spacing:.02em;}
+.pulse-score span{color:var(--ink-dim);font-size:22px;margin:0 5px;}
+.pulse-sport{font-family:'Barlow Condensed',sans-serif;font-weight:800;text-transform:uppercase;font-size:14px;color:var(--amber);margin-top:auto;padding-top:6px;display:flex;align-items:center;gap:7px;}
+.pulse-photo{grid-column:span 2;padding:0;overflow:hidden;position:relative;min-height:150px;border-left:none;}
+@media (min-width:520px){.pulse-photo{grid-column:span 3;}}
+.pulse-photo img{width:100%;height:170px;object-fit:cover;display:block;filter:saturate(1.05) contrast(1.05);}
+.pulse-photo-caption{position:absolute;left:0;right:0;bottom:0;padding:10px 14px;background:linear-gradient(to top, rgba(0,0,0,.88), rgba(0,0,0,.15) 70%, transparent);}
+.pulse-photo-caption strong{display:block;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.03em;color:#fff;}
+.pulse-photo-caption span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--amber-soft);}
+
+/* ---------- Sobre: modal com mais corpo (história, títulos, foto, dias fixos) ---------- */
+.about-modal{max-width:400px;max-height:min(640px,86vh);overflow-y:auto;}
+.about-photo-wrap{position:relative;margin:2px 0 14px;clip-path:polygon(0 0,100% 0,100% 100%,10px 100%);overflow:hidden;border-left:3px solid var(--amber);}
+.about-photo-wrap img{width:100%;display:block;object-fit:cover;max-height:210px;}
+.about-photo-wrap .about-caption{position:absolute;left:0;right:0;bottom:0;padding:9px 12px;background:linear-gradient(to top, rgba(0,0,0,.88), transparent);font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.03em;color:#fff;}
+.about-titles{font-family:'Space Mono',monospace;font-size:11px;line-height:1.6;color:var(--amber-soft);letter-spacing:.01em;margin:2px 0 16px;padding:10px 12px;border-left:3px solid var(--amber);background:rgba(242,101,10,.08);}
+.about-schedule{margin:0 0 16px;}
+.about-schedule-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);margin-bottom:8px;}
+.about-schedule-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);}
+.about-schedule-row:last-child{border-bottom:none;}
+.about-schedule-day{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.03em;color:var(--ink);width:78px;flex-shrink:0;}
+.about-schedule-sport{font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;font-size:14px;color:var(--ink-dim);display:flex;align-items:center;gap:8px;}
 
 /* ---------- botões: cortes angulados, sem soft radius ---------- */
 .btn{
@@ -929,13 +961,33 @@ function openAboutModal(){
   overlay.className="login-overlay";
   overlay.id="aboutOverlay";
   overlay.innerHTML=`
-    <div class="login-modal">
+    <div class="login-modal about-modal">
       <h2>Sobre o EQ Esportes</h2>
+      <div class="about-photo-wrap">
+        <img src="campeoes.jpg" alt="Time do Alazão comemorando um título" loading="lazy" />
+        <div class="about-caption">O Alazão em festa</div>
+      </div>
+      <p style="margin-bottom:12px;">
+        Nascido dentro do DAEQ — Diretório Acadêmico de Engenharia Química "Fernando Benedicto
+        Mainier" (UFF) —, o EQ Esportes é onde a turma da Engenharia Química troca a sala de aula
+        pela quadra. Toda semana tem racha marcado, e é ali, correndo atrás de bola, que a
+        comunidade se fortalece tanto quanto nos corredores da faculdade.
+      </p>
+      <div class="about-titles">
+        🏆 Bicampeões do Intercurso — e já com taças erguidas também em modalidades específicas pelo caminho. O Alazão corre com orgulho.
+      </div>
+      <div class="about-schedule">
+        <div class="about-schedule-title">Racha da semana</div>
+        <div class="about-schedule-row"><div class="about-schedule-day">Quarta</div><div class="about-schedule-sport"><span class="dot futebol"></span>Futebol</div></div>
+        <div class="about-schedule-row"><div class="about-schedule-day">Sexta</div><div class="about-schedule-sport"><span class="dot basquete"></span>Basquete</div></div>
+        <div class="about-schedule-row"><div class="about-schedule-day">Sábado</div><div class="about-schedule-sport"><span class="dot volei"></span>Vôlei</div></div>
+        <div class="about-schedule-row"><div class="about-schedule-day">Domingo</div><div class="about-schedule-sport"><span class="dot futevolei"></span>Futevôlei</div></div>
+      </div>
       <p style="margin-bottom:14px;">
-        Aplicativo oficial de organização das partidas de basquete, vôlei e futevôlei da
-        Comunidade de Engenharia Química, mantido pelo DAEQ — Diretório Acadêmico de Engenharia
-        Química "Fernando Benedicto Mainier" (UFF). Aqui você faz seu cadastro, avalia seu nível
-        em cada esporte, confirma presença no dia do jogo e acompanha o sorteio e o placar ao vivo.
+        Aplicativo oficial de organização das partidas de basquete, vôlei, futevôlei e futebol da
+        Comunidade de Engenharia Química. Aqui você faz seu cadastro, avalia seu nível em cada
+        esporte, confirma presença no dia do jogo e acompanha o sorteio e o placar ao vivo — tudo
+        organizado pelo DAEQ.
       </p>
       <div class="login-actions">
         <button type="button" class="btn primary" id="aboutCloseBtn" style="flex:1;">Entendi</button>
@@ -1427,6 +1479,45 @@ function exportBackup(){
 
 /* ---------- Navegação ---------- */
 function stopTicker(){ if(ticker){clearInterval(ticker);ticker=null;} }
+/* ---------- Roteamento por URL (cada tela tem endereço próprio) ---------- */
+const SPORT_TAB_KEYS=["checkin","sorteio","partida","rodizio","artilharia","melhorequipe"];
+const TAB_LABELS={checkin:"Presença",sorteio:"Sorteio",partida:"Partida",rodizio:"Rodízio",artilharia:"Artilharia",melhorequipe:"Melhor Equipe"};
+function pathForState(){
+  if(route==="participantes")return "/participantes";
+  if(route==="sport")return "/"+routeSport+(sportTab&&sportTab!=="checkin"?"/"+sportTab:"");
+  return "/";
+}
+function titleForState(){
+  const base="EQ Esportes";
+  if(route==="participantes")return "Participantes · "+base;
+  if(route==="sport"){
+    const s=getSport(routeSport);
+    const label=s?s.label:routeSport;
+    const tabLabel=TAB_LABELS[sportTab]||"";
+    return (tabLabel?tabLabel+" · ":"")+label+" · "+base;
+  }
+  return base;
+}
+function syncUrl(){
+  if(typeof history==="undefined"||!history.pushState)return;
+  const path=pathForState();
+  document.title=titleForState();
+  if(location.pathname!==path)history.pushState({route,routeSport,sportTab},"",path);
+}
+function applyPathToState(pathname){
+  const parts=(pathname||"/").split("/").filter(Boolean).map(p=>{try{return decodeURIComponent(p);}catch(e){return p;}});
+  if(!parts.length){route="home";return;}
+  if(parts[0]==="participantes"){route="participantes";return;}
+  const sportIds=SPORTS.map(s=>s.id);
+  if(sportIds.includes(parts[0])){
+    route="sport";routeSport=parts[0];
+    sportTab=(parts[1]&&SPORT_TAB_KEYS.includes(parts[1]))?parts[1]:"checkin";
+    return;
+  }
+  route="home";
+}
+window.addEventListener("popstate",()=>{ stopTicker(); applyPathToState(location.pathname); pendingGoal=null; render(); });
+
 function goHome(){stopTicker();route="home";render();}
 function goParticipants(){stopTicker();route="participantes";render();}
 function goSport(id){stopTicker();route="sport";routeSport=id;sportTab="checkin";pendingGoal=null;render();}
@@ -1440,7 +1531,7 @@ let lastScreenKey=null;
 // toque. Agora só disparamos a animação quando a tela visível de fato muda
 // (rota, esporte ou aba) — atualizações dentro da mesma tela só trocam o
 // conteúdo, sem o efeito de fade que parecia um refresh.
-function render(){const root=document.getElementById("app");root.innerHTML="";const screenKey=route+"|"+(route==="sport"?routeSport+"|"+sportTab:"");if(screenKey!==lastScreenKey){root.classList.remove("screen-anim");void root.offsetWidth;root.classList.add("screen-anim");}else{root.classList.remove("screen-anim");}lastScreenKey=screenKey;const slot=document.getElementById("authSlot");if(slot){slot.innerHTML="";slot.appendChild(authButton());}renderSyncPill();document.body.classList.toggle("has-bottom-nav",route==="home"||route==="participantes");document.body.classList.toggle("route-home",route==="home");const nav=document.getElementById("bottomNav");if(nav){nav.querySelectorAll("button").forEach(b=>{const isHome=b.hasAttribute("data-nav-home"),isPart=b.hasAttribute("data-nav-participantes");b.classList.toggle("active",(isHome&&route==="home")||(isPart&&route==="participantes"));});}if(!localCacheHadData&&!dataReadyForCurrentView()){renderSkeleton(root);return;}if(route==="home")renderHome(root);else if(route==="participantes")renderParticipantes(root);else renderSport(root,routeSport);}
+function render(){const root=document.getElementById("app");root.innerHTML="";syncUrl();const screenKey=route+"|"+(route==="sport"?routeSport+"|"+sportTab:"");if(screenKey!==lastScreenKey){root.classList.remove("screen-anim");void root.offsetWidth;root.classList.add("screen-anim");}else{root.classList.remove("screen-anim");}lastScreenKey=screenKey;const slot=document.getElementById("authSlot");if(slot){slot.innerHTML="";slot.appendChild(authButton());}renderSyncPill();document.body.classList.toggle("has-bottom-nav",route==="home"||route==="participantes");document.body.classList.toggle("route-home",route==="home");const nav=document.getElementById("bottomNav");if(nav){nav.querySelectorAll("button").forEach(b=>{const isHome=b.hasAttribute("data-nav-home"),isPart=b.hasAttribute("data-nav-participantes");b.classList.toggle("active",(isHome&&route==="home")||(isPart&&route==="participantes"));});}if(!localCacheHadData&&!dataReadyForCurrentView()){renderSkeleton(root);return;}if(route==="home")renderHome(root);else if(route==="participantes")renderParticipantes(root);else renderSport(root,routeSport);}
 
 function getLiveMatches(){
   const out=[];
@@ -1451,6 +1542,70 @@ function getLiveMatches(){
     }
   });
   return out;
+}
+
+function getLastResult(){
+  let best=null;
+  SPORTS.forEach(s=>{
+    const st=ensureSportState(s.id);
+    if(st.history && st.history.length){
+      const h=st.history[0];
+      if(!best || new Date(h.at)>new Date(best.h.at)) best={s,h};
+    }
+  });
+  return best;
+}
+function getTopScorer(){
+  const st=ensureSportState("futebol");
+  const goals=(st.futebol&&st.futebol.goals)||{};
+  const entries=Object.entries(goals).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+  if(!entries.length)return null;
+  return {name:playerName(entries[0][0]),goals:entries[0][1]};
+}
+const RACHA_SCHEDULE=[
+  {day:3,id:"futebol"},{day:5,id:"basquete"},{day:6,id:"volei"},{day:0,id:"futevolei"}
+];
+const WEEKDAY_LONG=["Domingo","Segunda","Terça","Quarta","Quinta","Sexta","Sábado"];
+function getNextRacha(){
+  const now=new Date(),nowDay=now.getDay();
+  let best=null;
+  RACHA_SCHEDULE.forEach(r=>{
+    const diff=(r.day-nowDay+7)%7;
+    if(!best||diff<best.diff)best={...r,diff};
+  });
+  if(!best)return null;
+  const sport=getSport(best.id);
+  const when=best.diff===0?"Hoje":best.diff===1?"Amanhã":WEEKDAY_LONG[best.day];
+  return {sport,when};
+}
+function renderHomePulse(root){
+  const wrap=document.createElement("div");wrap.className="home-pulse";
+  const last=getLastResult();
+  if(last){
+    const card=document.createElement("div");card.className="pulse-card";
+    card.innerHTML=`<div class="pulse-label">Último resultado</div><div class="pulse-score">${last.h.scoreA}<span>×</span>${last.h.scoreB}</div><div class="pulse-sport"><span class="dot ${last.s.id}"></span>${last.s.label}</div>`;
+    card.onclick=()=>goSport(last.s.id);card.style.cursor="pointer";
+    wrap.appendChild(card);
+  }
+  const scorer=getTopScorer();
+  if(scorer){
+    const card=document.createElement("div");card.className="pulse-card";
+    card.innerHTML=`<div class="pulse-label">Artilheiro da rodada</div><div class="pulse-score">${scorer.goals} <span style="font-size:16px;">gol${scorer.goals===1?"":"s"}</span></div><div class="pulse-sport"><span class="dot futebol"></span>${scorer.name}</div>`;
+    card.onclick=()=>goSport("futebol");card.style.cursor="pointer";
+    wrap.appendChild(card);
+  }
+  const next=getNextRacha();
+  if(next){
+    const card=document.createElement("div");card.className="pulse-card";
+    card.innerHTML=`<div class="pulse-label">Próximo racha</div><div class="pulse-score" style="font-size:26px;">${next.when}</div><div class="pulse-sport"><span class="dot ${next.sport.id}"></span>${next.sport.label}</div>`;
+    card.onclick=()=>goSport(next.sport.id);card.style.cursor="pointer";
+    wrap.appendChild(card);
+  }
+  const champ=document.createElement("div");champ.className="pulse-card pulse-photo";
+  champ.innerHTML=`<img src="campeoes.jpg" alt="Time do EQ Esportes comemorando o título" loading="lazy" /><div class="pulse-photo-caption"><strong>O Alazão em festa</strong><span>Bicampeões do Intercurso</span></div>`;
+  champ.onclick=openAboutModal;champ.style.cursor="pointer";
+  wrap.appendChild(champ);
+  root.appendChild(wrap);
 }
 
 function renderHome(root){
@@ -1489,6 +1644,7 @@ function renderHome(root){
     const card=document.createElement("div");card.className="no-live-card";
     card.textContent="Nenhuma partida ao vivo no momento";
     root.appendChild(card);
+    renderHomePulse(root);
   }
 
   const label=document.createElement("div");label.className="home-section-label";label.style.margin="18px auto 8px";label.textContent="Modalidades";
@@ -2496,6 +2652,7 @@ document.addEventListener("click",function(e){
   if(parts){e.preventDefault();e.stopPropagation();goParticipants();return;}
 },true);
 
+applyPathToState(location.pathname);
 localCacheHadData=loadLocal();normalizeAll();loaded=true;render();startFirebase();
 window.addEventListener("online",()=>render());
 window.addEventListener("offline",()=>render());
