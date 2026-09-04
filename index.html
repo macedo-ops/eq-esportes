@@ -393,7 +393,13 @@
   .p-actions{display:flex; gap:8px;}
   .icon-btn{
     background:none; border:none; color:var(--ink-dim); cursor:pointer;
-    font-size:15px; padding:4px 8px; line-height:1;
+    font-size:15px; line-height:1; padding:0;
+    /* Alvo de toque de pelo menos ~40px — antes o botão media só uns 23x23px
+       (padding 4px 8px em torno do glifo), pequeno demais pra dedo real no
+       celular; o ícone segue do mesmo tamanho, só a área clicável cresce. */
+    min-width:40px; min-height:40px;
+    display:inline-flex; align-items:center; justify-content:center;
+    touch-action:manipulation;
   }
   .icon-btn:hover{color:var(--ink);}
 
@@ -457,10 +463,15 @@
   .unassigned-item .u-name{font-size:13px; font-weight:600;}
   .tile .tag.count{color:var(--ink); opacity:.85;}
 
-  .stars{display:flex; align-items:center; gap:4px;}
-  .star-wrap{position:relative; width:22px; height:22px; cursor:pointer;}
-  .star-wrap svg{width:22px; height:22px; display:block;}
-  .star-half{position:absolute; top:0; width:11px; height:22px; z-index:2;}
+  .stars{display:flex; align-items:center; gap:2px;}
+  /* Antes cada metade clicável da estrela tinha só 11px de largura — ótimo
+     no mouse, mas minúsculo pra tocar com o dedo (recomendação usual é uns
+     44px). Agora a estrela visual continua 22px, mas a área de toque real
+     (star-wrap) cresce pra 30px, centralizada, então cada metade passa a
+     ter 15px em vez de 11px — quase o dobro de área de toque. */
+  .star-wrap{position:relative; width:28px; height:28px; display:flex; align-items:center; justify-content:center; cursor:pointer; touch-action:manipulation;}
+  .star-wrap svg{width:22px; height:22px; display:block; pointer-events:none;}
+  .star-half{position:absolute; top:0; width:14px; height:28px; z-index:2;}
   .star-half.left{left:0;} .star-half.right{right:0;}
 
   .rating-value{
@@ -468,7 +479,7 @@
     min-width:28px; text-align:right;
   }
   .rating-value.empty{color:var(--ink-dim);}
-  .rating-clear{font-size:12px; padding:4px 4px;}
+  .rating-clear{font-size:12px; min-width:34px; min-height:34px;}
   .rating-clear:disabled{opacity:.25; cursor:not-allowed;}
 
   .hist-toggle{
@@ -1162,6 +1173,37 @@ function requireOrganizer(){
   if(!isOrganizer){ showToast("Entre no modo organizador para fazer isso."); return false; }
   return true;
 }
+function closeConfirmModal(){ closeSheet("confirmOverlay"); }
+// Confirmação própria do app, no lugar do confirm() nativo do navegador.
+// Em muitos celulares — principalmente no app instalado na tela inicial
+// (modo PWA standalone) e em alguns navegadores embutidos (ex.: abrir o
+// link de dentro do Instagram/WhatsApp) — window.confirm() é bloqueado ou
+// não exibe nada, e o código simplesmente segue como se o usuário tivesse
+// cancelado. Isso fazia "Remover participante" parecer que não fazia nada
+// no celular. Esse modal roda 100% em HTML/CSS próprios do app, então
+// funciona igual em qualquer contexto.
+function askConfirm(message, onConfirm){
+  closeConfirmModal();
+  const overlay=document.createElement("div");
+  overlay.className="login-overlay";
+  overlay.id="confirmOverlay";
+  overlay.innerHTML=`
+    <div class="login-modal">
+      <div class="sheet-handle" id="confirmSheetHandle"></div>
+      <h2>Confirmar</h2>
+      <p>${message}</p>
+      <div class="login-actions">
+        <button type="button" class="btn" id="confirmCancelBtn">Cancelar</button>
+        <button type="button" class="btn primary" id="confirmOkBtn">Confirmar</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById("confirmOkBtn").onclick=()=>{ closeConfirmModal(); onConfirm(); };
+  document.getElementById("confirmCancelBtn").onclick=closeConfirmModal;
+  overlay.addEventListener("click",e=>{ if(e.target===overlay) closeConfirmModal(); });
+  makeSheetDraggable(document.getElementById("confirmSheetHandle"), overlay.querySelector(".login-modal"), closeConfirmModal);
+  attachSheetEsc("confirmOverlay", closeConfirmModal);
+}
 function authButton(){
   const b=document.createElement("button");
   b.className="auth-btn"+(isOrganizer?" on":"");
@@ -1580,8 +1622,7 @@ function renameParticipant(id){
 function removeParticipant(id){
   if(!requireOrganizer())return Promise.resolve(false);
   const p=participants.find(x=>x.id===id); if(!p)return;
-  if(!confirm(`Remover ${p.name} do cadastro?`))return;
-  return writeParticipants(list=>list.filter(x=>x.id!==id));
+  askConfirm(`Remover ${p.name} do cadastro?`,()=>{ writeParticipants(list=>list.filter(x=>x.id!==id)); });
 }
 function setRating(id,sport,value){
   if(!requireOrganizer())return Promise.resolve(false);
